@@ -1,0 +1,62 @@
+# SQL Query 1: Find the average amount paid by the top 5 customers
+--Outer query to get the average of the amount paid, using the ROUND function
+SELECT 
+ROUND(AVG(total_amount_paid), 2) as average
+FROM
+	(SELECT 
+		cust.customer_id AS cust_id,
+		cust.first_name AS customer_first_name,
+		cust.last_name AS customer_last_name,
+		ci.city AS city_name,
+		co.country AS country_name,
+		SUM(pay.amount) AS total_amount_paid
+	FROM
+		customer AS cust
+	JOIN payment AS pay ON pay.customer_id = cust.customer_id
+	JOIN address ON cust.address_id = address.address_id
+	JOIN city AS ci ON address.city_id = ci.city_id
+	JOIN country AS co ON ci.country_id = co.country_id
+	-- Selecting top 10 cities
+	WHERE ci.city IN ('Aurora', 'Bislig', 'Usak', 'Coacalco de Berriozbal', 'Xintai', 
+					  'Carmen', 'Sivas', 'Chapra', 'Iwaki', 'Rockford')
+	GROUP BY cust.customer_id, cust.first_name, cust.last_name, ci.city, co.country 
+	-- Order by total amount paid across all cities
+	ORDER BY total_amount_paid DESC
+	LIMIT 5);
+
+# SQL Query 2: Find out how many of the top 5 customers you identified in query 1 are based within each country
+--Outer statement that counts the number of unique customers from each country and number of unique top 5 customers from the subquery
+SELECT 
+	co.country AS country_name,
+	COUNT(DISTINCT cust.customer_id) AS all_customer_count,
+	COUNT(DISTINCT top_5_customers.cust_id) AS top_customer_count
+FROM country AS co
+JOIN city AS ci ON ci.country_id = co.country_id
+JOIN address ON address.city_id = ci.city_id
+JOIN customer AS cust ON cust.address_id = address.address_id
+LEFT JOIN
+	(SELECT 
+		cust.customer_id AS cust_id,
+		cust.first_name AS customer_first_name,
+		cust.last_name AS customer_last_name,
+		ci.city AS city_name,
+		co.country AS country_name,
+		SUM(pay.amount) AS total_amount_paid
+	FROM
+		customer AS cust
+	JOIN payment AS pay ON pay.customer_id = cust.customer_id
+	JOIN address ON cust.address_id = address.address_id
+	JOIN city AS ci ON address.city_id = ci.city_id
+	JOIN country AS co ON ci.country_id = co.country_id
+	-- Selecting top 10 cities
+	WHERE ci.city IN ('Aurora', 'Bislig', 'Usak', 'Coacalco de Berriozbal', 'Xintai', 
+					  'Carmen', 'Sivas', 'Chapra', 'Iwaki', 'Rockford')
+	GROUP BY cust.customer_id, cust.first_name, cust.last_name, ci.city, co.country 
+	-- Order by total amount paid across all cities
+	ORDER BY total_amount_paid DESC
+	LIMIT 5) AS top_5_customers ON top_5_customers.country_name = co.country
+--Show count of customers and top five customers, cannot include aggregate columns
+GROUP BY co.country
+--Sort the results returned by the query
+ORDER BY all_customer_count DESC
+LIMIT 10;
