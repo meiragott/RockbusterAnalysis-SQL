@@ -1,0 +1,64 @@
+# SQL Query 1: Average Amount Paid by Top 5 Customers
+--Defining the CTE as ‘top_customers’
+WITH top_customers AS (
+	SELECT 
+		cust.customer_id AS cust_id,
+		cust.first_name AS customer_first_name,
+		cust.last_name AS customer_last_name,
+		ci.city AS city_name,
+		co.country AS country_name,
+		SUM(pay.amount) AS total_amount_paid
+	FROM
+		customer AS cust
+	JOIN payment AS pay ON pay.customer_id = cust.customer_id
+	JOIN address ON cust.address_id = address.address_id
+	JOIN city AS ci ON address.city_id = ci.city_id
+	JOIN country AS co ON ci.country_id = co.country_id
+	WHERE ci.city IN ('Aurora', 'Bislig', 'Usak', 'Coacalco de Berriozbal', 'Xintai', 
+					  'Carmen', 'Sivas', 'Chapra', 'Iwaki', 'Rockford')
+	GROUP BY cust.customer_id, cust.first_name, cust.last_name, ci.city, co.country 
+	ORDER BY total_amount_paid DESC
+	LIMIT 5
+-- Selecting top 5 customers based on total payment
+)
+--Redefining the Main Query (Operations) to calculate average payment of top 5 customers
+SELECT 
+ROUND(AVG(total_amount_paid), 2) AS average
+FROM top_customers; -- From the defined CTE
+
+# SQL Query 2: Count of Top 5 Customers by Country
+--Same CTE as query 1 but named ‘top_5_customers’
+WITH top_5_customers AS (
+    SELECT 
+        cust.customer_id AS cust_id,
+        cust.first_name AS customer_first_name,
+        cust.last_name AS customer_last_name,
+        ci.city AS city_name,
+        co.country AS country_name,
+        SUM(pay.amount) AS total_amount_paid
+    FROM
+        customer AS cust
+    JOIN payment AS pay ON pay.customer_id = cust.customer_id
+    JOIN address ON cust.address_id = address.address_id
+    JOIN city AS ci ON address.city_id = ci.city_id
+    JOIN country AS co ON ci.country_id = co.country_id
+    WHERE ci.city IN ('Aurora', 'Bislig', 'Usak', 'Coacalco de Berriozbal', 'Xintai', 
+                      'Carmen', 'Sivas', 'Chapra', 'Iwaki', 'Rockford')
+    GROUP BY cust.customer_id, cust.first_name, cust.last_name, ci.city, co.country 
+    ORDER BY total_amount_paid DESC
+    LIMIT 5
+)
+--This is where Query 1 and Query 2 differ
+This Main Query uses the data from the CTE to analyze and combine functions to give the count in each country with the top 5 customers
+SELECT 
+    co.country AS country_name,
+    COUNT(DISTINCT cust.customer_id) AS all_customer_count,
+    COUNT(DISTINCT top_5_customers.cust_id) AS top_customer_count
+FROM country AS co
+JOIN city AS ci ON ci.country_id = co.country_id
+JOIN address ON address.city_id = ci.city_id
+JOIN customer AS cust ON cust.address_id = address.address_id
+LEFT JOIN top_5_customers ON top_5_customers.country_name = co.country
+GROUP BY co.country
+ORDER BY all_customer_count DESC
+LIMIT 10;
