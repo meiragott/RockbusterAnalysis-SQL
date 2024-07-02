@@ -5,8 +5,8 @@ Data-driven analysis using SQL for the mock company Rockbuster Stealth to answer
 ---
 ## Introduction
 Rockbuster Stealth LLC, a global movie rental company, is transitioning to an online video rental service to stay competitive against streaming giants like Netflix and Amazon Prime. This project involves performing a data-driven analysis using SQL to support Rockbuster Stealth’s business strategy. The goal is to answer key business questions that will guide the company's transition to the digital market.
-## Key Questions & Objectives
 
+## Key Questions & Objectives
 The Rockbuster Stealth Management Board has posed several key questions to help shape the company's 2020 strategy:
 
 1. Which movies contributed the most/least to revenue gain?
@@ -15,7 +15,7 @@ The Rockbuster Stealth Management Board has posed several key questions to help 
 4. Where are customers with a high lifetime value based?
 5. Do sales figures vary between geographic regions?
 
-Our objective is to use SQL to analyze the data and provide clear, data-driven answers to these questions.
+The objective is to use SQL to analyze the data and provide clear, data-driven answers to these questions.
 
 ## Data & Tools
 
@@ -32,7 +32,7 @@ The dataset used in this project includes information on Rockbuster's film inven
 ## Visualizations
 [Rockbuster Stealth Data Visualizations](https://public.tableau.com/views/3_10RockbusterStealthDataVisualizations/3_10RockbusterStealthDataVisualizations?:language=en-US&:sid=&:display_count=n&:origin=viz_share_link)
 
-To effectively communicate the results of the analysis, several visualizations were created (	*see link to Tableau Visualizations above*):
+To effectively communicate the results of the analysis, several visualizations were created (*see link to Tableau Visualizations above*):
 
 1. **Customer Geography: Revenue & Customer Count By Country**
 2. **Bar Chart: Top 10 Revenues by Country and City**
