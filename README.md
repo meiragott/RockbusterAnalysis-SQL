@@ -19,7 +19,7 @@ Our objective is to use SQL to analyze the data and provide clear, data-driven a
 
 ## Data & Tools
 
-### Data
+### Data Source
 
 The dataset used in this project includes information on Rockbuster's film inventory, customers, and payments. The dataset was loaded into a PostgreSQL database for analysis.
 
